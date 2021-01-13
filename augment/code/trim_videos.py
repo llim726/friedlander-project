@@ -86,13 +86,13 @@ def trim_videos(vidpath, project_name, camera_n, vid_type):
     vid_start = str(light_detected[0][0]/10) # temporary video start is 0 because no buffer at beginning
     vid_end = str(light_detected[0][-1]/10)
     vid_og = vidpath
-    vid_new = os.path.join(os.path.sep, cwd, project_name, dir_name, 'videos', dir_name+'_sync_'+'cam_'+str(camera_n)+'_'+vid_type+'.mp4') # Video path must not have any spacing in the path string
+    vid_new = os.path.join(os.path.sep, cwd, project_name, 'videos', dir_name+'_sync_'+'cam_'+str(camera_n)+'_'+vid_type+'.mp4') # Video path must not have any spacing in the path string
     
     if ' ' in vid_new:
         raise Exception('New video path name must not contain any spaces!')
         
-    if not os.path.isdir(os.path.join(os.path.sep, cwd, project_name, dir_name, 'videos')):
-        os.makedirs(os.path.join(os.path.sep, cwd, project_name, dir_name, 'videos'))
+    if not os.path.isdir(os.path.join(os.path.sep, cwd, project_name, 'videos')):
+        os.makedirs(os.path.join(os.path.sep, cwd, project_name, 'videos'))
     
     command = "ffmpeg -i " + vid_og + " -ss " + vid_start + " -to " + vid_end + " -c copy " + vid_new #string of ffmpeg command to crop video
     
