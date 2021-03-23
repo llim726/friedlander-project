@@ -1,8 +1,6 @@
 """
 Created on Tue Apr  2 12:24:48 2019
-
 stereoTo3d_funcs.py
-
 This is a function library containing:
     * get_frame: a code to convert videos into image frames
     * calibrate_stereorectify: finds the intrinsic and extrinsic calibration factors for undistortion
@@ -49,7 +47,7 @@ def get_frame(vidpath,cwd,project_name,dir_name):
 
     while success:
         count = count+1
-        vidcap.set(cv2.CAP_PROP_POS_MSEC, count*1000)
+        vidcap.set(cv2.CAP_PROP_POS_MSEC, count*500)
         success, image = vidcap.read()
         if success:
             cv2.imwrite(out_dir +"\\"+ dir_name + str(count) +".jpg",image)
@@ -225,6 +223,8 @@ def undistort_points(dlc_cam1,dlc_cam2,mtx_cam1,mtx_cam2,dist_cam1,dist_cam2,R1,
     # May need to check the size of the length discrepancy but can add this after verifying whether the DLC triangulation works the same
     if (len(data_num1) != len(data_num2)):
         array_len=np.min((len(data_num1),len(data_num2)))
+    else:
+        array_len=len(data_num1)
         
     data_num1 = data_num1[:array_len,:]
     data_num2 = data_num2[:array_len,:]
@@ -294,19 +294,19 @@ def get3dpoints(cwd, project_name, marker_labels, likelihood_cam1, likelihood_ca
         
     vid_time = bodypart_len/30 # length of data divided by framerate
     time_inc = vid_time/bodypart_len
-    time_array = np.reshape(np.arange(0, vid_time, time_inc), (bodypart_len,1)) ############# vid_time is temporarily vid_time-time_inc
+    time_array = np.reshape(np.arange(0, vid_time, time_inc)[:bodypart_len], (bodypart_len,1)) ############# vid_time is temporarily vid_time-time_inc
     framenum_array = np.reshape(range(0,bodypart_len), (bodypart_len,1))
     
     j=0
     for i in range(0, likelihood_cam1.shape[1]):
-        index_cam1 = np.where(likelihood_cam1[:,i] < 0.9)
+        index_cam1 = np.where(likelihood_cam1[:,i] < 0.6)
     
         csv_format[index_cam1,j:j+3] = 0
         j+=3
         
     j=0
     for i in range(0, likelihood_cam1.shape[1]):
-        index_cam2 = np.where(likelihood_cam2[:,i] < 0.9)
+        index_cam2 = np.where(likelihood_cam2[:,i] < 0.6)
     
         csv_format[index_cam2,j:j+3] = 0
         j+=3
